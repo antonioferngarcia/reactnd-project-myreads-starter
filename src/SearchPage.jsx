@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
-// import * as BooksAPI from './BooksAPI'
 import { Link } from 'react-router-dom'
+import * as _ from 'lodash'
+
+import * as BooksAPI from './BooksAPI'
+import BookCard from './BookCard';
 
 class SearchPage extends Component {
 
@@ -10,16 +13,28 @@ class SearchPage extends Component {
   }
 
   state = {
-    searchKeywords: ''
+    searchKeywords: '',
+    books: []
   }
 
   manageSearchInput(event) {
-    console.log(event.target.value);
     this.setState( { searchKeywords: event.target.value });
+    this.searchBooks(event.target.value)
   }
 
+  searchBooks = _.throttle((value) => {
+    if(value !== '') {
+      BooksAPI.search(value)
+        .then((result) => {
+          this.setState ({ books: result.error ? [] : result });
+        })
+    } else {
+      this.setState ({ books: [] });
+    }
+  }, 500, { trailing: true });
+
   render() {
-    const { searchKeywords } = this.state;
+    const { searchKeywords, books } = this.state;
 
     return (
       <div className="app">
@@ -43,7 +58,7 @@ class SearchPage extends Component {
             </div>
             <div className="search-books-results">
               <ol className="books-grid">
-
+                {books.map((book, key) => <BookCard key={`book-card-${key}`} book={book}/>)}
               </ol>
             </div>
           </div>

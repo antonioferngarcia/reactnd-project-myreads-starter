@@ -1,24 +1,25 @@
-import React, { Component } from 'react'
-// import * as BooksAPI from './BooksAPI'
+import React from 'react'
+import PropTypes from 'prop-types';
 
-class BookOptions extends Component {
-  // TODO:  set as stateless component
+import { SHELF } from './constants';
 
-  render() {
-    const { setCurrentlyReadBook, setWantToReadBook, setReadBook, unsetBook } = this.props;
-
-    return (
-      <div className="book-shelf-changer">
-        <select>
-          <option value="move" disabled>Move to...</option>
-          <option onClick={setCurrentlyReadBook} value="currentlyReading">Currently Reading</option>
-          <option onClick={setWantToReadBook} value="wantToRead">Want to Read</option>
-          <option onClick={setReadBook} value="read">Read</option>
-          <option onClick={unsetBook} value="none">None</option>
-        </select>
-      </div>
-    );
-  }
+export default function BookOptions(props) {
+  return (
+    <div className="book-shelf-changer">
+      <select
+        value={props.selected ? props.selected : SHELF.NONE}
+        onChange={event => props.onUpdateShelf(event.target.value)}>
+        <option value="move" disabled>Move to...</option>
+        <option value={SHELF.CURRENTLY_READING}>Currently Reading</option>
+        <option value={SHELF.WANT_TO_READ}>Want to Read</option>
+        <option value={SHELF.READ}>Read</option>
+        <option value={SHELF.NONE}>None</option>
+      </select>
+    </div>
+  );
 }
 
-export default BookOptions;
+BookOptions.propTypes = {
+  selected: PropTypes.string,
+  onUpdateShelf: PropTypes.func.isRequired,
+};

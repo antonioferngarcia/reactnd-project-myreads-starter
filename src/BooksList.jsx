@@ -5,6 +5,11 @@ import * as BooksAPI from './BooksAPI'
 import BooksShelf from './BookShelf';
 
 class BooksList extends Component {
+  constructor(props) {
+    super(props);
+    this.fetchBooks = this.fetchBooks.bind(this);
+  }
+
   state = {
     currentlyReading: [],
     wantToRead: [],
@@ -12,6 +17,10 @@ class BooksList extends Component {
   }
 
   componentDidMount() {
+    this.fetchBooks()
+  }
+
+  fetchBooks() {
     BooksAPI.getAll().then(books => {
       const currentlyReading = [];
       const wantToRead = [];
@@ -33,7 +42,7 @@ class BooksList extends Component {
         }
       });
       this.setState({ currentlyReading, wantToRead, read });
-    })
+    });
   }
 
   render() {
@@ -47,14 +56,14 @@ class BooksList extends Component {
             </div>
             <div className="list-books-content">
               <div>
-                <BooksShelf books={currentlyReading} shelfTitle='Currently Reading'/>
-                <BooksShelf books={wantToRead} shelfTitle='Want to Read' />
-                <BooksShelf books={read} shelfTitle='Read' />
+                <BooksShelf updateBooksShelfs={this.fetchBooks} books={currentlyReading} shelfTitle='Currently Reading'/>
+                <BooksShelf updateBooksShelfs={this.fetchBooks} books={wantToRead} shelfTitle='Want to Read' />
+                <BooksShelf updateBooksShelfs={this.fetchBooks} books={read} shelfTitle='Read' />
               </div>
             </div>
             <div className="open-search">
               <Link to='/search'>
-                <button onClick={() => console.log('show search pls')}>Add a book</button>
+                <button/>
               </Link>
             </div>
           </div>
