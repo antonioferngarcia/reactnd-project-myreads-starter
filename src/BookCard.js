@@ -31,7 +31,7 @@ class BookCard extends Component {
       <li>
         <div className="book">
           <div className="book-top">
-            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks ? book.imageLinks.thumbnail : ''})` }}></div>
+            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks ? book.imageLinks.thumbnail : 'https://dummyimage.com/128x193/2e7c31/fff.png&text=Cover+Missing'})` }}></div>
             <BookOptions selected={book.shelf} onUpdateShelf={this.updateBookShelf}/>
           </div>
           <div className="book-title">{book.title}</div>

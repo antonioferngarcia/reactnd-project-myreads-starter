@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types';
 import * as _ from 'lodash'
 
 import * as BooksAPI from './BooksAPI'
@@ -12,6 +13,14 @@ class SearchPage extends Component {
     this.manageSearchInput = this.manageSearchInput.bind(this);
   }
 
+  static propTypes = {
+    booksInShelf: PropTypes.array.isRequired
+  };
+
+  static defaultProps = {
+    booksInShelf: []
+  };
+
   state = {
     searchKeywords: '',
     books: []
@@ -19,7 +28,7 @@ class SearchPage extends Component {
 
   manageSearchInput(event) {
     this.setState( { searchKeywords: event.target.value });
-    this.searchBooks(event.target.value)
+    this.searchBooks(event.target.value);
   }
 
   searchBooks = _.throttle((value) => {
@@ -35,6 +44,13 @@ class SearchPage extends Component {
 
   render() {
     const { searchKeywords, books } = this.state;
+    const { booksInShelf, fetchBooks } = this.props;
+
+    books.map(book => {
+      const bookFound = booksInShelf.filter(bookInShelf => bookInShelf.id === book.id);
+      book.shelf = bookFound[0] ? bookFound[0].shelf : book.shelf;
+      return book;
+    });
 
     return (
       <div className="app">
@@ -58,7 +74,7 @@ class SearchPage extends Component {
             </div>
             <div className="search-books-results">
               <ol className="books-grid">
-                {books.map((book, key) => <BookCard key={`book-card-${key}`} book={book}/>)}
+                {books.map((book, key) => <BookCard updateBooksShelfs={fetchBooks} key={`book-card-${key}`} book={book}/>)}
               </ol>
             </div>
           </div>

@@ -198,3 +198,24 @@ button:active {
   text-align: center;
   font-size: 0.8em;
 }
+
+.not-found-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.go-home {
+  padding: 20px;
+  border-radius: 5px;
+  color: white;
+  background-color: dodgerblue;
+  cursor: pointer;
+  border: 0;
+}
+
+.go-home:hover {
+  background-color: #3c90e2;
+}

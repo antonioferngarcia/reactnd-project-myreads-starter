@@ -1,52 +1,20 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-import * as BooksAPI from './BooksAPI'
 import BooksShelf from './BookShelf';
 
 class BooksList extends Component {
-  constructor(props) {
-    super(props);
-    this.fetchBooks = this.fetchBooks.bind(this);
-  }
 
-  state = {
-    currentlyReading: [],
-    wantToRead: [],
-    read: []
-  }
-
-  componentDidMount() {
-    this.fetchBooks()
-  }
-
-  fetchBooks() {
-    BooksAPI.getAll().then(books => {
-      const currentlyReading = [];
-      const wantToRead = [];
-      const read = [];
-      books.forEach(book => {
-        switch (book.shelf) {
-          case 'currentlyReading':
-            currentlyReading.push(book);
-            break;
-          case 'wantToRead':
-            wantToRead.push(book);
-            break;
-          case 'read':
-            read.push(book);
-            break;
-          default:
-            console.error(`Unknown book shelf: ${book.shelf}`)
-            break;
-        }
-      });
-      this.setState({ currentlyReading, wantToRead, read });
-    });
-  }
+  static propTypes = {
+    currentlyReading: PropTypes.array.isRequired,
+    wantToRead: PropTypes.array.isRequired,
+    read: PropTypes.array.isRequired,
+    fetchBooks: PropTypes.func.isRequired
+  };
 
   render() {
-    const { currentlyReading, wantToRead, read } = this.state;
+    const { currentlyReading, wantToRead, read, fetchBooks } = this.props;
 
     return (
       <div className="app">
@@ -56,9 +24,9 @@ class BooksList extends Component {
             </div>
             <div className="list-books-content">
               <div>
-                <BooksShelf updateBooksShelfs={this.fetchBooks} books={currentlyReading} shelfTitle='Currently Reading'/>
-                <BooksShelf updateBooksShelfs={this.fetchBooks} books={wantToRead} shelfTitle='Want to Read' />
-                <BooksShelf updateBooksShelfs={this.fetchBooks} books={read} shelfTitle='Read' />
+                <BooksShelf updateBooksShelfs={fetchBooks} books={currentlyReading} shelfTitle='Currently Reading'/>
+                <BooksShelf updateBooksShelfs={fetchBooks} books={wantToRead} shelfTitle='Want to Read' />
+                <BooksShelf updateBooksShelfs={fetchBooks} books={read} shelfTitle='Read' />
               </div>
             </div>
             <div className="open-search">
